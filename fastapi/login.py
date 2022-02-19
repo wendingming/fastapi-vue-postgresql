@@ -24,11 +24,51 @@ ACCESS_TOKEN_EXPIRE_MINUTES = 30
 # 这里定义一个字典，来模拟数据库中的数据
 fake_users_db = {
     "johndoe": {
+        "uid": 1,
         "username": "johndoe",
         "full_name": "John Doe",
+        "avatar": "https://up.enterdesk.com/2021/edpic/c4/9f/09/c49f090757360f843141fe2bab2cfc8f_1.jpg",
         "email": "johndoe@example.com",
         "hashed_password": "$2b$12$EixZaYVK1fsbw1ZfbX3OXePaWxn96p36WQoeG6Lruj3vjPGga31lW",#默认密码secret
         "disabled": False,
+        "permisson": [
+            {
+            "menu_id":1,
+            "menu_name":"系统首页",
+            "parent_id":0,
+            "pageurl":"/sys/index"
+            },
+            {
+            "menu_id":2,
+            "menu_name":"菜单管理",
+            "parent_id":1,
+            "pageurl":"/sys/list"
+            },
+            {
+            "menu_id":3,
+            "menu_name":"角色管理",
+            "parent_id":1,
+            "pageurl":"/sys/role"
+            },
+            {
+            "menu_id":4,
+            "menu_name":"管理员管理",
+            "parent_id":1,
+            "pageurl":"/sys/admin"
+            },
+            {
+            "menu_id":5,
+            "menu_name":"用户管理",
+            "parent_id":0,
+            "pageurl":"/user/index"
+            },
+            {
+            "menu_id":6,
+            "menu_name":"会员列表",
+            "parent_id":5,
+            "pageurl":"/user/list"
+            },
+        ]
     }
 }
 
@@ -48,10 +88,13 @@ class FormData(BaseModel):
 
 class User(BaseModel):
     """定义用户的数据模型"""
+    uid: str
     username: str
-    email: Optional[str] = None
     full_name: Optional[str] = None
+    avatar: Optional[str] = None
+    email: Optional[str] = None
     disabled: Optional[bool] = None
+    permisson: Optional[str] = None
 
 
 class UserInDB(User):

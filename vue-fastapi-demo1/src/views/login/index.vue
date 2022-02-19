@@ -23,7 +23,8 @@
 </template>
 <script>
 //挂载api.js组件
-import Api from '@/api/api.js'
+//import Api from '@/api/api.js'
+//import { setToken,setTokenType } from '@/common/token.js'
 
 export default {/* eslint-disable */
 
@@ -43,12 +44,23 @@ export default {/* eslint-disable */
         submitForm() {
             //console.log(this.loginForm)，，，为什么，VUE会给数组套一层proxy壳，草，怎么想的？，没办法，用JSON.parse转换成可以正常用的数组
             let params = JSON.parse(JSON.stringify(this.loginForm));
+            this.$store.dispatch("Login", params).then(() => {
+                this.$message.success("登录成功");
+                this.$router.push({
+                    path: this.redirect || "/"
+                })
+            })
             //console.log(params)
-            Api.login(params).then((res) => {//访问接口，并传递表单数据
-                console.log(res)
+            /*Api.login(params).then((res) => {//访问接口，并传递表单数据
+                //console.log(res.access_token);
+                //console.log(res.token_type);
+                setToken(res.access_token);
+                setTokenType(res.token_type);
+                //console.log(getToken());
+                //console.log(getType());
             }).catch(err=>{
                 console.log(err)
-            });
+            });*/
         },
         resetForm(formName) {
             this.loginForm.username = "";

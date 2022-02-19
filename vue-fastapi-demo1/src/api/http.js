@@ -1,8 +1,10 @@
 // eslint-disable-next-line no-unused-vars
 import Axios from 'axios'
-import { getToken } from "@/common/token";
-//import errorCode from '@/common/errorCode'
-//import {ElMessage} from 'element-plus'
+import store from '@/store'
+import { getToken, getType } from "@/common/token";
+import errorCode from '@/common/errorCode'
+import {ElMessageBox,ElMessage} from 'element-plus'
+import 'element-plus/theme-chalk/src/message.scss'
 //import VueAxios from 'vue-axios'
 
 const BaseURL = 'http://127.0.0.1:9000'
@@ -20,13 +22,14 @@ let http = Axios.create({
         }
         return ret
     }],
+    timeout: 10000
 })
 
 ///请求拦截
 http.interceptors.request.use(config => {
     const isToken = (config.headers || {}).isToken === false
     if (getToken() && !isToken) {
-        config.headers['Authorization'] = 'Bearer ' + getToken() // 让每个请求携带自定义token 请根据实际情况自行修改
+        config.headers['Authorization'] = getType() + getToken() // 让每个请求携带自定义token 请根据实际情况自行修改
     }
     return config
 }, err => {
@@ -34,17 +37,26 @@ http.interceptors.request.use(config => {
 })
 //响应拦截
 http.interceptors.response.use(res => {
-    if (res.status == 200) {
-        //判断是否成功响应，成功响应值=1，这个响应变量，需要前后端约定好，例如code=1：代表成功，或者code=200代表成功，
-        /*if(response.data.code == 200){
-
-        }*/
-        //const code = res.data.code || 200;
-        //const msg = errorCode[code] || res.data.msg || errorCode['default'];
-        //ElMessage.error(msg)
-        return res.data;
+    const code = res.data.status_code || 200;
+    const msg = errorCode[code] || res.data.detail || errorCode['default']
+    if (code === 401) {
+        ElMessageBox.confirm('登录状态已过期，您可以继续留在该页面，或者重新登录', '系统提示', {
+            confirmButtonText: '重新登录',
+            cancelButtonText: '取消',
+            type: 'warning'
+        }).then(() => {
+            store.dispatch('loginOut').then(() => {
+                location.href = '/index';
+            })
+        })
+    } else if (code === 500) {
+        ElMessage.error(msg)
+        return Promise.reject(new Error(msg))
+    } else if (code !== 200) {
+        ElMessage.error(msg)
+        return Promise.reject('error')
     } else {
-        return Promise.reject(res)
+        return res.data
     }
 }, err => {
     return Promise.reject(err)
