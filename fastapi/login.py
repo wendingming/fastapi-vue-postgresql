@@ -10,6 +10,7 @@ from passlib.context import CryptContext
 from pydantic import BaseModel
 from starlette.middleware.cors import CORSMiddleware
 
+import json
 """定义关于token的相关常量
 SECRET_KEY : 用于加密解密的密钥，只允许服务器知道，打死不告诉别人
             可以执行 openssl rand -hex 32 获取一串随机的字符
@@ -20,18 +21,7 @@ SECRET_KEY = "09d25e094faa6ca2556c818166b7a9563b93f7099f6f0f4caa6cf63b88e8d3e7"
 ALGORITHM = "HS256"
 ACCESS_TOKEN_EXPIRE_MINUTES = 30
 
-
-# 这里定义一个字典，来模拟数据库中的数据
-fake_users_db = {
-    "johndoe": {
-        "uid": 1,
-        "username": "johndoe",
-        "full_name": "John Doe",
-        "avatar": "https://up.enterdesk.com/2021/edpic/c4/9f/09/c49f090757360f843141fe2bab2cfc8f_1.jpg",
-        "email": "johndoe@example.com",
-        "hashed_password": "$2b$12$EixZaYVK1fsbw1ZfbX3OXePaWxn96p36WQoeG6Lruj3vjPGga31lW",#默认密码secret
-        "disabled": False,
-        "permisson": [
+dict_permisson = [
             {
             "menu_id":1,
             "menu_name":"系统首页",
@@ -69,6 +59,18 @@ fake_users_db = {
             "pageurl":"/user/list"
             },
         ]
+json_permisson = json.dumps(dict_permisson)
+# 这里定义一个字典，来模拟数据库中的数据
+fake_users_db = {
+    "johndoe": {
+        "uid": 1,
+        "username": "johndoe",
+        "full_name": "John Doe",
+        "avatar": "https://up.enterdesk.com/2021/edpic/c4/9f/09/c49f090757360f843141fe2bab2cfc8f_1.jpg",
+        "email": "johndoe@example.com",
+        "hashed_password": "$2b$12$EixZaYVK1fsbw1ZfbX3OXePaWxn96p36WQoeG6Lruj3vjPGga31lW",#默认密码secret
+        "disabled": False,
+        "permisson": json_permisson
     }
 }
 
