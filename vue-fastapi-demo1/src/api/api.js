@@ -8,12 +8,9 @@ export default {
     //登录
     login(params) {
         return http.post('/login', params)
+    },
+    //管理员信息
+    getInfo(params) {
+        return http.get('/userinfo', params)
     }
-    /*login(params) {
-        return request({
-            url: '/login',
-            method: 'post',
-            data: params
-        })
-    }*/
 }

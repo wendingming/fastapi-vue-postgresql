@@ -41,23 +41,22 @@ const user = {
         }
     },
     actions: {//响应方法
-        /*GetInfo({ commit, state }) {
+        GetInfo({ commit, state }) {//获取管理员信息
             return new Promise((resolve, reject) => {
-                getInfo(state.token).then(res => {
-                    //console.log(res);
-                    const user = res.data.userInfo;               //绑定管理员信息到常量
+                api.getInfo().then(res => {
+                    const user = JSON.parse(JSON.stringify(res));               //绑定管理员信息到常量
                     const avatar = user.avatar == null ? require("@/assets/img/empty-face.png") : user.avatar;//解析头像地址，没有头像则绑定一张默认头像
-                    commit('SET_USERNAME', user.username)                //绑定姓名
+                    commit('SET_USERNAME', user.username)          //绑定姓名
                     commit('SET_AVATAR', avatar)                  //绑定头像
-                    commit('SET_UID',user.id);                     //绑定id
-                    commit('SET_EMAIL',res.data.email);           //绑定email
-                    commit('SET_PERMISSON',res.data.perms);       //绑定权限
-                    resolve(res)
+                    commit('SET_UID',user.uid);                     //绑定id
+                    commit('SET_EMAIL',user.email);           //绑定email
+                    commit('SET_PERMISSON',user.permisson);       //绑定权限
+                    resolve(state)
                 }).catch(error => {
                     reject(error)
                 })
             })
-        },*/
+        },
         Login({commit},userInfo){//访问登录接口
             console.log('开始登录');
             return new Promise((resolve,reject)=>{
